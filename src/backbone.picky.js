@@ -90,7 +90,7 @@ Backbone.Picky = (function (Backbone, _) {
     },
 
     // Toggle select all / none. If some are selected, it
-    // will select all. If all are selected, it will select 
+    // will select all. If all are selected, it will select
     // none. If none are selected, it will select all.
     toggleSelectAll: function () {
       if (this.selectedLength === this.length) {
@@ -114,8 +114,9 @@ Backbone.Picky = (function (Backbone, _) {
 
     // Select this model, and tell our
     // collection that we're selected
-    select: function () {
-      if (this.selected) { return; }
+    select: function (force) {
+      force = force || false;
+      if (this.selected && force === false) { return; }
 
       this.selected = true;
       this.trigger("selected", this);
@@ -127,8 +128,9 @@ Backbone.Picky = (function (Backbone, _) {
 
     // Deselect this model, and tell our
     // collection that we're deselected
-    deselect: function () {
-      if (!this.selected) { return; }
+    deselect: function (force) {
+      force = force || false;
+      if (!this.selected && force === false) { return; }
 
       this.selected = false;
       this.trigger("deselected", this);

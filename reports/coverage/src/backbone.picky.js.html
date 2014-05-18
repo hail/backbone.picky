@@ -100,6 +100,11 @@
         .cstat-no { background: #fc8c84; color: #111; }
         .fstat-no { background: #ffc520; color: #111 !important; }
         .cbranch-no { background:  yellow !important; color: #111; }
+
+        .cstat-skip { background: #ddd; color: #111; }
+        .fstat-skip { background: #ddd; color: #111 !important; }
+        .cbranch-skip { background: #ddd !important; color: #111; }
+
         .missing-if-branch {
             display: inline-block;
             margin-right: 10px;
@@ -107,9 +112,18 @@
             padding: 0 4px;
             background: black;
             color: yellow;
-            xtext-decoration: line-through;
         }
-        .missing-if-branch .typ {
+
+        .skip-if-branch {
+            display: none;
+            margin-right: 10px;
+            position: relative;
+            padding: 0 4px;
+            background: #ccc;
+            color: white;
+        }
+
+        .missing-if-branch .typ, .skip-if-branch .typ {
             color: inherit !important;
         }
 
@@ -176,6 +190,8 @@
             margin: 0 !important;
         }
         .com { color: #999 !important; }
+        .ignore-none { color: #999; font-weight: normal; }
+
     </style>
 </head>
 <body>
@@ -183,17 +199,18 @@
     <h1>Code coverage report for <span class="entity">src/backbone.picky.js</span></h1>
     <h2>
         
-        Statements: <span class="metric">94.74% <small>(72 / 76)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">94.87% <small>(74 / 78)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Branches: <span class="metric">88.89% <small>(32 / 36)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">90.91% <small>(40 / 44)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
         Functions: <span class="metric">94.12% <small>(16 / 17)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Lines: <span class="metric">95.45% <small>(63 / 66)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">95.59% <small>(65 / 68)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
     <div class="path"><a href="../index.html">All files</a> &#187; <a href="index.html">src/</a> &#187; backbone.picky.js</div>
 </div>
@@ -380,7 +397,9 @@
 179
 180
 181
-182</td><td class="line-coverage"><span class="cline-any cline-yes">1</span>
+182
+183
+184</td><td class="line-coverage"><span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -498,6 +517,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">260</span>
+<span class="cline-any cline-yes">260</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">141</span>
 <span class="cline-any cline-yes">141</span>
@@ -510,6 +530,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">92</span>
 <span class="cline-any cline-yes">92</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">43</span>
@@ -647,13 +668,13 @@
 &nbsp;
     // Deselect all models in this collection
     selectNone: function () {
-      <span class="missing-if-branch" title="if path not taken"" >I</span>if (this.selectedLength === 0) { <span class="cstat-no" title="statement not covered" >return; </span>}
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (this.selectedLength === 0) { <span class="cstat-no" title="statement not covered" >return; </span>}
       this.each(function (model) { model.deselect(); });
       calculateSelectedLength(this);
     },
 &nbsp;
     // Toggle select all / none. If some are selected, it
-    // will select all. If all are selected, it will select 
+    // will select all. If all are selected, it will select
     // none. If none are selected, it will select all.
     toggleSelectAll: function () {
       if (this.selectedLength === this.length) {
@@ -677,8 +698,9 @@
 &nbsp;
     // Select this model, and tell our
     // collection that we're selected
-    select: function () {
-      if (this.selected) { return; }
+    select: function (force) {
+      force = force || false;
+      if (this.selected &amp;&amp; force === false) { return; }
 &nbsp;
       this.selected = true;
       this.trigger("selected", this);
@@ -690,8 +712,9 @@
 &nbsp;
     // Deselect this model, and tell our
     // collection that we're deselected
-    deselect: function () {
-      if (!this.selected) { return; }
+    deselect: function (force) {
+      force = force || false;
+      if (!this.selected &amp;&amp; force === false) { return; }
 &nbsp;
       this.selected = false;
       this.trigger("deselected", this);
@@ -734,7 +757,7 @@
       return;
     }
 &nbsp;
-    <span class="missing-if-branch" title="else path not taken"" >E</span>if (selectedLength &gt; 0 &amp;&amp; selectedLength &lt; length) {
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (selectedLength &gt; 0 &amp;&amp; selectedLength &lt; length) {
       collection.trigger("select:some", collection);
       return;
     }
@@ -747,7 +770,7 @@
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jul 26 2013 11:50:30 GMT-0500 (CDT)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon May 19 2014 10:57:36 GMT+1200 (NZST)</div>
 </div>
 
 <script src="../prettify.js"></script>
