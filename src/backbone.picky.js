@@ -16,8 +16,9 @@ Backbone.Picky = (function (Backbone, _) {
 
     // Select a model, deselecting any previously
     // selected model
-    select: function(model){
-      if (model && this.selected === model) { return; }
+    select: function(model, force){
+      force = force || false;
+      if (model && this.selected === model && force === false) { return; }
 
       this.deselect();
 
@@ -122,7 +123,7 @@ Backbone.Picky = (function (Backbone, _) {
       this.trigger("selected", this);
 
       if (this.collection) {
-        this.collection.select(this);
+        this.collection.select(this, force);
       }
     },
 
@@ -136,7 +137,7 @@ Backbone.Picky = (function (Backbone, _) {
       this.trigger("deselected", this);
 
       if (this.collection) {
-        this.collection.deselect(this);
+        this.collection.deselect(this, force);
       }
     },
 
